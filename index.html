@@ -5,7 +5,6 @@
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react-dom.js"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/css/foundation.css">
 	</head>
 	<body>
 		<div id="content">
@@ -15,49 +14,22 @@
 						return (
 							<div className="hn-wrapper">
 								<HNReaderItemPanel/>
-								<HNReaderBrowser/>
 							</div>
 							);
 					}
 				});
 
-				var HNReaderItemPanel = React.createClass({
-					getInitialState: function() {
-						return {top: []};
-					},
-					componentDidMount: function() {
-						$.ajax({
-							url: 'https://hacker-news.firebaseio.com/v0/topstories.json',
-							dataType: 'json',
-							cache: false,
-							success: function(data) {
-								this.setState({top: data});
-							}.bind(this),
-							error: function(xhr, status, err) {
-								console.error('https://hacker-news.firebaseio.com/v0/topstories.json', status, err.toString());
-							}.bind(this)
-						})
-					},
+				var HNReaderItemPanel = React.createClass({	
 					render: function() {
 						return (
 							<div className="hn-item-panel">
 								<HNReaderItemSearchBar/>
-								<HNReaderItemList top={this.state.top}/>
+								<HNReaderItemList/>
 							</div>
 							);
 					}
 				});
-
-				var HNReaderBrowser = React.createClass({
-					render: function() {
-						return (
-							<div className="hn-browser">
-								browser
-							</div>
-							);
-					}
-				});
-
+				
 				var HNReaderItemSearchBar = React.createClass({
 					render: function() {
 						return (
@@ -68,21 +40,99 @@
 					}
 				});
 
+				//General item list contains list element(sublist, next button, pre button)
+				//bind with the search bar?
+				//initially query the top list from the api
 				var HNReaderItemList = React.createClass({
-					render: function() {
-						var thingNodes = this.props.top.map(function(thing) {
-							return (
-								<li key={thing}> {thing} </li>
-								);
+					getInitialState: function() {
+						return {top: [], current: [], page: 1};
+					},
+					componentDidMount: function() {
+						$.ajax({
+							url: 'https://hacker-news.firebaseio.com/v0/topstories.json',
+							dataType: 'json',
+							cache: true,
+							success: function(data) {
+								this.setState({top: data, current: data.slice(0, 10)});
+							}.bind(this),
+							error: function(xhr, status, err) {
+								console.error('https://hacker-news.firebaseio.com/v0/topstories.json', 
+									status, err.toString());
+							}.bind(this)
 						});
+					},
+					handleNextClick: function(event) {
+						var page = (this.state.page == 50) ? this.stage.page : this.state.page + 1;
+						var top = this.state.top;
+						this.setState({page: page, current: top.slice(page * 10 - 9, page * 10)});
+					},
+					handlePreviousClick: function(event) {
+						var page = (this.state.page == 1) ? this.state.page : this.state.page - 1;
+						var top = this.state.top;
+						this.setState({page: page, current: top.slice(page * 10 - 9, page * 10)});
+
+					},
+					render: function() {
 						return (
-							<ul>
-								{thingNodes}
-							</ul>
+							<div className="list">
+								<HNReaderItemSubList current={this.state.current} />
+								<button onClick={this.handlePreviousClick}>Previous</button>
+								<button onClick={this.handleNextClick}>Next</button>
+								<div className="page"> {this.state.page} </div>
+							</div>
 							);
 					}
 				});
 
+				//10 items or somthing
+				var HNReaderItemSubList = React.createClass({
+					render: function() {
+						var itemNodes = this.props.current.map(function(itemId) {
+							return (
+								<HNReaderItem itemId={itemId} key={itemId} />
+								);
+						});
+						return (
+							<div className="sub-list">
+								{itemNodes}
+							</div>
+							);
+					}
+				}); 
+
+				//Single story item, bind to the browser i guess?
+				var HNReaderItem = React.createClass({
+					getInitialState: function() {
+						return {item: {}};
+					},
+					componentDidMount: function() {
+						$.ajax({
+							url: 'https://hacker-news.firebaseio.com/v0/item/' + this.props.itemId + '.json?print=pretty',
+							dataType: 'json',
+							cache: true,
+							success: function(data) {
+								this.setState({item: data});
+							}.bind(this),
+							error: function(xhr, status, err) {
+								console.error('https://hacker-news.firebaseio.com/v0/item/' + this.props.itemId + 
+									'.json?print=pretty', status, err.toString());
+							}.bind(this)
+						});
+					},
+					handleStoryClick: function(event) {
+
+					},
+					render: function() {
+						return (
+							<div className="item-story">
+								<a href={this.state.item.url} target="_blank">
+									<div className="item-title">{this.state.item.title}</div>
+								</a>
+							</div>
+							);
+					}
+				});
+				
 				ReactDOM.render(<HNReaderWrapper/>, document.getElementById('content'));
 			</script>
 		</div>
