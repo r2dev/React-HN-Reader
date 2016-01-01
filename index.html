@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react-dom.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="content">
+			<script type="text/babel">
+				var HNReaderWrapper = React.createClass({
+					render: function() {
+						return (
+							<div className="hn-wrapper">
+								<HNReaderItemPanel/>
+								<HNReaderBrowser/>
+							</div>
+							);
+					}
+				});
+
+				var HNReaderItemPanel = React.createClass({
+					render: function() {
+						return (
+							<div className="hn-item-panel">
+								<HNReaderItemSearchBar/>
+								<HNReaderItemList/>
+							</div>
+							);
+					}
+				});
+
+				var HNReaderBrowser = React.createClass({
+					render: function() {
+						return (
+							<div className="hn-browser">
+								browser
+							</div>
+							);
+					}
+				});
+
+				var HNReaderItemSearchBar = React.createClass({
+					render: function() {
+						return (
+							<form>
+								<input type="text" placeholder="Search...." />
+							</form>
+							);
+					}
+				});
+
+				var HNReaderItemList = React.createClass({
+					render: function() {
+						return (
+							<ul>
+								<li></li>
+							</ul>
+							);
+					}
+				});
+
+				ReactDOM.render(<HNReaderWrapper/>, document.getElementById('content'));
+			</script>
+		</div>
+	</body>
+</html>
