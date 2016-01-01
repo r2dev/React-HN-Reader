@@ -5,6 +5,7 @@
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react-dom.js"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/css/foundation.css">
 	</head>
 	<body>
 		<div id="content">
@@ -21,11 +22,27 @@
 				});
 
 				var HNReaderItemPanel = React.createClass({
+					getInitialState: function() {
+						return {top: []};
+					},
+					componentDidMount: function() {
+						$.ajax({
+							url: 'https://hacker-news.firebaseio.com/v0/topstories.json',
+							dataType: 'json',
+							cache: false,
+							success: function(data) {
+								this.setState({top: data});
+							}.bind(this),
+							error: function(xhr, status, err) {
+								console.error('https://hacker-news.firebaseio.com/v0/topstories.json', status, err.toString());
+							}.bind(this)
+						})
+					},
 					render: function() {
 						return (
 							<div className="hn-item-panel">
 								<HNReaderItemSearchBar/>
-								<HNReaderItemList/>
+								<HNReaderItemList top={this.state.top}/>
 							</div>
 							);
 					}
@@ -53,9 +70,14 @@
 
 				var HNReaderItemList = React.createClass({
 					render: function() {
+						var thingNodes = this.props.top.map(function(thing) {
+							return (
+								<li key={thing}> {thing} </li>
+								);
+						});
 						return (
 							<ul>
-								<li></li>
+								{thingNodes}
 							</ul>
 							);
 					}
