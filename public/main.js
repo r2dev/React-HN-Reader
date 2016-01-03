@@ -35,13 +35,25 @@ var HNReaderItemPanel = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className="ui container">
-				<div className="ui grid">
-					<div className="six wide column">
+			<div className="ui two column grid stackable">
+				<div className="column">
+					<div className="ui segment">
 						<div className="ui top attached button" onClick={this.handlePreviousClick}>Previous</div>
 						<HNReaderItemList current={this.state.current} />
 						<div className="ui bottom attached button" onClick={this.handleNextClick}>Next</div>
-						<div className="page"> {this.state.page} </div>
+					</div>
+				</div>
+				<div className="column">
+					<div className="ui text container">
+						<div className="ui header">
+							React-HN-Reader
+						</div>
+						<p>Source code: <a href="https://github.com/r2dev/React-HN-Reader" target="_blank">github.com/r2dev/React-HN-Reader</a></p>
+						<p>Built with: 
+							<a href="https://facebook.github.io/react/" target="_blank">ReactJS</a>
+							<span>&</span>
+							<a href="http://semantic-ui.com/" target="_blank">Semantic-ui</a>
+						</p>
 					</div>
 				</div>
 			</div>
