@@ -1,0 +1,27 @@
+{
+  "name": "React-HN-Reader",
+  "version": "1.0.0",
+  "description": "HN Reader with ReactJS",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/r2dev/React-HN-Reader"
+  },
+  "author": "R2",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/r2dev/React-HN-Reader/issues"
+  },
+  "homepage": "https://github.com/r2dev/React-HN-Reader",
+  "dependencies": {
+    "babel-preset-react": "^6.3.13",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "react": "^0.14.5",
+    "react-dom": "^0.14.5",
+    "semantic-ui": "^2.1.7"
+  }
+}

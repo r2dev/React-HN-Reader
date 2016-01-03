@@ -1,0 +1,10 @@
+# npm ignore
+npm-debug.log
+node_modules/*
+
+# Sublime Text
+*.sublime-workspace
+
+public/bundle.js
+public/test.html
+public/semantic.min.css
